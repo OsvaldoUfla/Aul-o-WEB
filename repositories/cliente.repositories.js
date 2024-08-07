@@ -71,9 +71,9 @@ async function editarCliente(cpf, cliente){
 async function conectar(){
     const pool = new pg.Pool({        
         user: 'postgres', 
-        host: 'localhost', 
+        host: 'postgresConteiner.2', 
         database: 'BDTeste', 
-        password: '2022#estudante',
+        password: 'postgresConteiner',
         port: 5432
     })
 

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Clientes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gerenciamento de Clientes</h1>
+        <div class="form-group">
+            <label for="cpf">CPF:</label>
+            <input type="text" id="cpf">
+        </div>
+        <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome">
+        </div>
+        <button onclick="consultarCliente()">Consultar Cliente</button>
+        <button onclick="consultarClientePorCPF()">Consultar Cliente por CPF</button>
+        <button onclick="cadastrarCliente()">Cadastrar Cliente</button>
+        <button onclick="editarCliente()">Editar Cliente</button>
+        <button onclick="excluirCliente()">Excluir Cliente</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        const baseUrl = 'http://localhost:3000/clientes';
+
+        async function consultarCliente() {
+            try {
+                const response = await fetch(baseUrl);
+                const data = await response.json();
+                document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('Erro ao consultar cliente:', error);
+            }
+        }
+
+        async function consultarClientePorCPF() {
+            const cpf = document.getElementById('cpf').value;
+            try {
+                const response = await fetch(`${baseUrl}/${cpf}`);
+                const data = await response.json();
+                document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('Erro ao consultar cliente por CPF:', error);
+            }
+        }
+
+        async function cadastrarCliente() {
+            const nome = document.getElementById('nome').value;
+            const cpf = document.getElementById('cpf').value;
+            try {
+                const response = await fetch(baseUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nome, cpf })
+                });
+                const data = await response.json();
+                document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('Erro ao cadastrar cliente:', error);
+            }
+        }
+
+        async function editarCliente() {
+            const nome = document.getElementById('nome').value;
+            const cpf = document.getElementById('cpf').value;
+            try {
+                const response = await fetch(`${baseUrl}/${cpf}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nome })
+                });
+                const data = await response.json();
+                document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('Erro ao editar cliente:', error);
+            }
+        }
+
+        async function excluirCliente() {
+            const cpf = document.getElementById('cpf').value;
+            try {
+                const response = await fetch(`${baseUrl}/${cpf}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('Erro ao excluir cliente:', error);
+            }
+        }
+    </script>
+</body>
+</html>
